@@ -174,6 +174,10 @@ class _loginpageState extends State<loginpage> {
                               //   });
                               // }
                             });
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("LogIn Successsfully !"),
+                              duration: Duration(seconds: 2),
+                            ));
                           },
                           style: ElevatedButton.styleFrom(
                               elevation: 10,

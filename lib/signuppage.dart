@@ -274,6 +274,9 @@ class _signuppgState extends State<signuppg> {
                             //   passwordstatus = false;
                             // }
                           });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Registration Successsfully !"),duration: Duration(seconds: 2),));
                         },
                         style: ElevatedButton.styleFrom(
                             shadowColor: Colors.black,
