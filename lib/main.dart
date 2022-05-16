@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:e_app/carsoualsilde.dart';
 import 'package:e_app/signuppage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -73,6 +74,7 @@ class _loginpageState extends State<loginpage> {
                   Container(
                     padding: EdgeInsets.all(5),
                     child: TextField(
+                      keyboardType: TextInputType.emailAddress,
                       onChanged: (value) {
                         setState(() {
                           usernamestatus = false;
@@ -165,7 +167,7 @@ class _loginpageState extends State<loginpage> {
                             });
                           } else {
                             var url = Uri.parse(
-                                '');
+                                'https://leachiest-draft.000webhostapp.com/Apicalling/login.php');
                             var response = await http.post(url, body: loginmap);
                             print('Response status: ${response.statusCode}');
                             print('Response body: ${response.body}');
