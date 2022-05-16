@@ -297,15 +297,6 @@ class _signuppgState extends State<signuppg> {
                                     backgroundColor: Colors.grey,
                                     textColor: Colors.white,
                                     fontSize: 16.0);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "Temporary Server Down",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.SNACKBAR,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.grey,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
                               }
                             } else {
                               ScaffoldMessenger.of(context)
