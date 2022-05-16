@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:e_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
@@ -275,6 +276,44 @@ class _signuppgState extends State<signuppg> {
                             var response = await http.post(url, body: map);
                             print('Response status: ${response.statusCode}');
                             print('Response body: ${response.body}');
+
+                            var regstration = jsonDecode(response.body);
+
+                            Myreg reg = Myreg.fromJson(regstration);
+
+                            if (reg.connection == 1) {
+                              if (reg.result == 1) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text("Registration Successsfully !"),
+                                  duration: Duration(seconds: 2),
+                                ));
+                              } else if (reg.result == 2) {
+                                Fluttertoast.showToast(
+                                    msg: "Email Already exits...",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.SNACKBAR,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.grey,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Temporary Server Down",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.SNACKBAR,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.grey,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("Please try after some time..."),
+                                duration: Duration(seconds: 2),
+                              ));
+                            }
                           }
 
                           // EasyLoading.show(status: 'Loading.....');
@@ -290,11 +329,6 @@ class _signuppgState extends State<signuppg> {
                           //   emailstatus = false;
                           //   passwordstatus = false;
                           // }
-
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Registration Successsfully !"),
-                            duration: Duration(seconds: 2),
-                          ));
                         },
                         style: ElevatedButton.styleFrom(
                             shadowColor: Colors.black,
@@ -331,5 +365,24 @@ class _signuppgState extends State<signuppg> {
         ),
       ))),
     );
+  }
+}
+
+class Myreg {
+  int? connection;
+  int? result;
+
+  Myreg({this.connection, this.result});
+
+  Myreg.fromJson(Map<String, dynamic> json) {
+    connection = json['connection'];
+    result = json['result'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['connection'] = this.connection;
+    data['result'] = this.result;
+    return data;
   }
 }

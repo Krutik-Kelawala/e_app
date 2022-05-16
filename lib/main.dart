@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:e_app/carsoualsilde.dart';
 import 'package:e_app/signuppage.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MaterialApp(
@@ -27,8 +28,7 @@ class _loginpageState extends State<loginpage> {
     return Scaffold(
       backgroundColor: Color(0xFF84E586),
       body: FadeInDown(
-        delay: Duration(seconds: 3),
-        duration: Duration(seconds: 5),
+        duration: Duration(seconds: 1),
         child: SafeArea(
             child: SingleChildScrollView(
                 child: Container(
@@ -146,28 +146,37 @@ class _loginpageState extends State<loginpage> {
                 children: [
                   Container(
                     child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           String pusername = username.text;
                           String puserpassword = password.text;
 
-                          setState(() {
-                            if (pusername.isEmpty) {
-                              setState(() {
-                                usernamestatus = true;
-                              });
-                            }
-                            if (puserpassword.isEmpty) {
-                              setState(() {
-                                passwordstatus = true;
-                              });
-                            }
-                            // else {
-                            //   setState(() {
-                            //     usernamestatus = false;
-                            //     passwordstatus = false;
-                            //   });
-                            // }
-                          });
+                          Map loginmap = {
+                            "Userlogin": pusername,
+                            "Userpassword": puserpassword
+                          };
+
+                          if (pusername.isEmpty) {
+                            setState(() {
+                              usernamestatus = true;
+                            });
+                          } else if (puserpassword.isEmpty) {
+                            setState(() {
+                              passwordstatus = true;
+                            });
+                          } else {
+                            var url = Uri.parse(
+                                '');
+                            var response = await http.post(url, body: loginmap);
+                            print('Response status: ${response.statusCode}');
+                            print('Response body: ${response.body}');
+                          }
+                          // else {
+                          //   setState(() {
+                          //     usernamestatus = false;
+                          //     passwordstatus = false;
+                          //   });
+                          // }
+
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("LogIn Successsfully !"),
                             duration: Duration(seconds: 2),

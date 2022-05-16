@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_app/main.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,26 +79,32 @@ class _pageviewState extends State<pageview> {
             //   }).toList(),
             // ),
 
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(
-                      builder: (context) {
-                        return loginpage();
+            FadeIn(
+              delay: Duration(seconds: 2),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (context) {
+                            return loginpage();
+                          },
+                        ));
                       },
-                    ));
-                  },
-                  style: OutlinedButton.styleFrom(
-                      elevation: 10,
-                      shadowColor: Colors.black,
-                      backgroundColor: Colors.lightBlueAccent,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  child: Text(
-                    "Get Started",
-                    style: TextStyle(color: CupertinoColors.white),
-                  )),
+                      style: OutlinedButton.styleFrom(
+                          elevation: 10,
+                          shadowColor: Colors.black,
+                          backgroundColor: Colors.lightBlueAccent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      child: Text(
+                        "Get Started",
+                        style: TextStyle(color: CupertinoColors.white),
+                      )),
+                ),
+              ),
             )
           ],
         ),
