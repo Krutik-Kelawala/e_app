@@ -40,6 +40,8 @@ dependencies:
   flutter_easyloading:
   carousel_slider:
   fluttertoast:
+  shared_preferences:
+  lottie:
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,7 @@ flutter:
 #     - images/
      - backgroundimg/
      - carouselimage/
+     - lottieanimation/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
