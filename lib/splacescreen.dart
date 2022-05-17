@@ -52,9 +52,10 @@ class _splacescreenpgState extends State<splacescreenpg> {
       body: SafeArea(
         child: Center(
           child: Container(
-            height: 500,
-            width: 250,
-            child: Lottie.asset("lottieanimation/lottie.json",fit: BoxFit.contain),
+            height: 200,
+            width: 300,
+            child:
+                Lottie.asset("lottieanimation/lottie.json", fit: BoxFit.fill),
           ),
         ),
       ),

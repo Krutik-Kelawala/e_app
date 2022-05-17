@@ -63,6 +63,9 @@ class _signuppgState extends State<signuppg> {
                   InkWell(
                       onTap: () {
                         showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20))),
                           context: context,
                           builder: (context) {
                             return Container(
@@ -70,7 +73,7 @@ class _signuppgState extends State<signuppg> {
                               //     borderRadius: BorderRadius.only(
                               //         topRight: Radius.circular(20),
                               //         topLeft: Radius.circular(20))),
-                              height: 150,
+                              height: 100,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -89,7 +92,7 @@ class _signuppgState extends State<signuppg> {
                                         },
                                         icon: Icon(
                                           Icons.camera_alt,
-                                          size: 50,
+                                          size: 40,
                                         )),
                                   ),
                                   Container(
@@ -106,7 +109,7 @@ class _signuppgState extends State<signuppg> {
                                         },
                                         icon: Icon(
                                           Icons.image,
-                                          size: 50,
+                                          size: 40,
                                         )),
                                   )
                                 ],

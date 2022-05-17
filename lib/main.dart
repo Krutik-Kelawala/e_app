@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:e_app/signuppage.dart';
 import 'package:e_app/splacescreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -47,7 +49,10 @@ class _loginpageState extends State<loginpage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            child: Image.asset("backgroundimg/p2.png"),
+            height: 200,
+            width: 200,
+            child: Lottie.asset("lottieanimation/loginpganimation.json",
+                fit: BoxFit.fill),
           ),
           SizedBox(
             height: 20,
@@ -203,14 +208,28 @@ class _loginpageState extends State<loginpage> {
                           print('Response status: ${response.statusCode}');
                           print('Response body: ${response.body}');
 
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("LogIn Successsfully !"),
-                            duration: Duration(seconds: 2),
-                          ));
-
                           var logindata = jsonDecode(response.body);
 
                           login log = login.fromJson(logindata);
+
+                          if (log.connection == 1) {
+                            if (log.result == 1) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("LogIn Successsfully !"),
+                                duration: Duration(seconds: 2),
+                              ));
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Email or Password Invalid !",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.SNACKBAR,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
+                          }
 
                           String? pid = log.userdata!.id;
                           String? pname = log.userdata!.name;
@@ -223,8 +242,7 @@ class _loginpageState extends State<loginpage> {
 
                           splacescreenpg.pref!.setString("id", pid!);
                           splacescreenpg.pref!.setString("name", pname!);
-                          splacescreenpg.pref!
-                              .setString("contact", pcontact!);
+                          splacescreenpg.pref!.setString("contact", pcontact!);
                           splacescreenpg.pref!.setString("mail", pemail!);
                           splacescreenpg.pref!
                               .setString("password", ppassword!);
@@ -251,8 +269,7 @@ class _loginpageState extends State<loginpage> {
                         text: TextSpan(children: [
                       TextSpan(
                           text: "Don't have account ? ",
-                          style:
-                              TextStyle(fontSize: 10, color: Colors.black)),
+                          style: TextStyle(fontSize: 10, color: Colors.black)),
                       TextSpan(
                           text: "Sign Up",
                           style: TextStyle(fontSize: 20, color: Colors.blue))
