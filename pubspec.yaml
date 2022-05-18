@@ -39,6 +39,7 @@ dependencies:
   fluttertoast:
   shared_preferences:
   lottie:
+  flutter_easyloading:
 
 dev_dependencies:
   flutter_test:

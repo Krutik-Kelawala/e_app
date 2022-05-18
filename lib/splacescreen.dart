@@ -49,13 +49,14 @@ class _splacescreenpgState extends State<splacescreenpg> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF84E586),
       body: SafeArea(
         child: Center(
           child: Container(
-            height: 200,
-            width: 300,
-            child:
-                Lottie.asset("lottieanimation/lottie.json", fit: BoxFit.fill),
+            height: 300,
+            width: 350,
+            child: Lottie.asset("lottieanimation/onlineshopping.json",
+                fit: BoxFit.fill),
           ),
         ),
       ),

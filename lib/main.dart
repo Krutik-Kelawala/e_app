@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:e_app/homepage.dart';
 import 'package:e_app/signuppage.dart';
 import 'package:e_app/splacescreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +14,7 @@ import 'package:lottie/lottie.dart';
 void main() {
   runApp(MaterialApp(
     home: splacescreenpg(),
+    builder: EasyLoading.init(),
   ));
 }
 
@@ -218,6 +219,14 @@ class _loginpageState extends State<loginpage> {
                                   .showSnackBar(SnackBar(
                                 content: Text("LogIn Successsfully !"),
                                 duration: Duration(seconds: 2),
+                              ));
+                              // EasyLoading.show(status: 'loading...');
+                              // EasyLoading.dismiss();
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(
+                                builder: (context) {
+                                  return Homepg();
+                                },
                               ));
                             } else {
                               Fluttertoast.showToast(
