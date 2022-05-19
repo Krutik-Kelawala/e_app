@@ -35,12 +35,16 @@ class _loginpageState extends State<loginpage> {
 
   @override
   Widget build(BuildContext context) {
+    // double theight = MediaQuery.of(context).size.height;
+    // double tstatusbar = MediaQuery.of(context).padding.top;
+    // double tnavigator = MediaQuery.of(context).padding.bottom;
+    // double bodyh = theight - tstatusbar - tnavigator;
     return Scaffold(
       backgroundColor: Color(0xFF84E586),
       body: SafeArea(
           child: SingleChildScrollView(
               child: Container(
-                  // height: MediaQuery.of(context).size.height,
+                  // height: bodyh,
                   // decoration: BoxDecoration(
                   //     image: DecorationImage(
                   //         opacity: 100,
@@ -220,14 +224,16 @@ class _loginpageState extends State<loginpage> {
                                 content: Text("LogIn Successsfully !"),
                                 duration: Duration(seconds: 2),
                               ));
-                              // EasyLoading.show(status: 'loading...');
-                              // EasyLoading.dismiss();
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(
-                                builder: (context) {
-                                  return Homepg();
-                                },
-                              ));
+                              EasyLoading.show(status: 'loading...')
+                                  .whenComplete(() {
+                                EasyLoading.dismiss();
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(
+                                  builder: (context) {
+                                    return Homepg();
+                                  },
+                                ));
+                              });
                             } else {
                               Fluttertoast.showToast(
                                   msg: "Email or Password Invalid !",

@@ -4,9 +4,12 @@ import 'dart:io';
 import 'package:e_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+
+import 'homepage.dart';
 
 class signuppg extends StatefulWidget {
   @override
@@ -286,11 +289,22 @@ class _signuppgState extends State<signuppg> {
 
                             if (reg.connection == 1) {
                               if (reg.result == 1) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text("Registration Successsfully !"),
-                                  duration: Duration(seconds: 2),
-                                ));
+                                EasyLoading.show(status: 'loading...')
+                                    .whenComplete(() {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content:
+                                        Text("Registration Successsfully !"),
+                                    duration: Duration(seconds: 2),
+                                  ));
+                                  EasyLoading.dismiss();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(
+                                    builder: (context) {
+                                      return loginpage();
+                                    },
+                                  ));
+                                });
                               } else if (reg.result == 2) {
                                 Fluttertoast.showToast(
                                     msg: "Email Already exits...",
