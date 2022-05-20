@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_app/splacescreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -127,15 +128,25 @@ class _AddproductState extends State<Addproduct> {
 
   @override
   Widget build(BuildContext context) {
+    double theight = MediaQuery.of(context).size.height;
+    double tstatusbar = MediaQuery.of(context).padding.top;
+    double tnavigator = MediaQuery.of(context).padding.bottom;
+    double appbarheight = kToolbarHeight;
+    double bodyh = theight - tstatusbar - tnavigator - appbarheight;
     return Scaffold(
-      backgroundColor: Color(0xFFEE9E9E),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: InkWell(
+      // backgroundColor: Color(0xFFEE9E9E),
+      body: Container(
+        height: bodyh,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("backgroundimg/back1.jpeg"),
+                fit: BoxFit.cover,
+                opacity: 150)),
+        child: SingleChildScrollView(
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
                 onTap: () {
                   showModalBottomSheet(
                     shape: RoundedRectangleBorder(
@@ -145,13 +156,18 @@ class _AddproductState extends State<Addproduct> {
                     context: context,
                     builder: (context) {
                       return Container(
-                        height: 150,
+                        height: 200,
                         child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
                               "Update Product Image",
                               style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Divider(
+                              thickness: 3,
+                              endIndent: 20,
+                              indent: 20,
                             ),
                             TextButton(
                                 onPressed: () async {
@@ -202,94 +218,143 @@ class _AddproductState extends State<Addproduct> {
                         ),
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    pnamestatus = false;
-                  });
-                },
-                controller: productname,
-                decoration: InputDecoration(
-                    errorText: pnamestatus ? "Enter Product name" : null,
-                    hintText: "Enter product name",
-                    labelText: "Product Name"),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    ppricestatus = false;
-                  });
-                },
-                controller: productprice,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    errorText: ppricestatus ? "Enter Product price" : null,
-                    hintText: "Enter product price",
-                    labelText: "Product Price"),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: TextField(
-                controller: productdiscription,
-                maxLines: 10,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    hintText: "Discription",
-                    labelText: "Product Discription"),
-              ),
-            ),
-            Container(
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      elevation: 10,
-                      shadowColor: Colors.black),
-                  onPressed: () async {
-                    String pname = productname.text;
-                    String pprice = productprice.text;
-                    String pdetail = productdiscription.text;
-                    List<int> ll = File(productimg).readAsBytesSync();
-                    String productimagepic = base64Encode(ll);
-
-                    Map productmap = {
-                      "userid": userloginid,
-                      "nameofproduct": pname,
-                      "priceofprodut": pprice,
-                      "detailofproduct": pdetail,
-                      "imageofproduct": productimagepic
-                    };
-
-                    if (pname.isEmpty) {
-                      setState(() {
-                        pnamestatus = true;
-                      });
-                    } else if (pprice.isEmpty) {
-                      setState(() {
-                        ppricestatus = true;
-                      });
-                    } else {
-                      var url = Uri.parse(
-                          'https://leachiest-draft.000webhostapp.com/Apicalling/adddproduct.php');
-                      var response = await http.post(url, body: productmap);
-                      print('Response status: ${response.statusCode}');
-                      print('Response body: ${response.body}');
-                    }
+              Container(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  toolbarOptions: ToolbarOptions(
+                      cut: true, paste: true, selectAll: true, copy: true),
+                  onChanged: (value) {
+                    setState(() {
+                      pnamestatus = false;
+                    });
                   },
-                  child: Text("Add Product")),
-            )
-          ],
+                  controller: productname,
+                  decoration: InputDecoration(
+                      errorText: pnamestatus ? "Enter Product name" : null,
+                      hintText: "Enter product name",
+                      labelText: "Product Name"),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  toolbarOptions: ToolbarOptions(
+                      cut: true, paste: true, selectAll: true, copy: true),
+                  onChanged: (value) {
+                    setState(() {
+                      ppricestatus = false;
+                    });
+                  },
+                  controller: productprice,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      errorText: ppricestatus ? "Enter Product price" : null,
+                      hintText: "Enter product price",
+                      labelText: "Product Price"),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  toolbarOptions: ToolbarOptions(
+                      cut: true, paste: true, selectAll: true, copy: true),
+                  controller: productdiscription,
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      hintText: "Discription",
+                      labelText: "Product Discription"),
+                ),
+              ),
+              Container(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        elevation: 10,
+                        shadowColor: Colors.black),
+                    onPressed: () async {
+                      String pname = productname.text;
+                      String pprice = productprice.text;
+                      String pdetail = productdiscription.text;
+                      List<int> ll = File(productimg).readAsBytesSync();
+                      String productimagepic = base64Encode(ll);
+
+                      Map productmap = {
+                        "userid": userloginid,
+                        "nameofproduct": pname,
+                        "priceofprodut": pprice,
+                        "detailofproduct": pdetail,
+                        "imageofproduct": productimagepic
+                      };
+
+                      if (pname.isEmpty) {
+                        setState(() {
+                          pnamestatus = true;
+                        });
+                      } else if (pprice.isEmpty) {
+                        setState(() {
+                          ppricestatus = true;
+                        });
+                      } else {
+                        var url = Uri.parse(
+                            'https://leachiest-draft.000webhostapp.com/Apicalling/adddproduct.php');
+                        var response = await http.post(url, body: productmap);
+                        print('Response status: ${response.statusCode}');
+                        print('Response body: ${response.body}');
+
+                        var productadd = jsonDecode(response.body);
+
+                        Addproductdata add_product =
+                            Addproductdata.fromJson(productadd);
+
+                        if (add_product.connection == 1) {
+                          if (add_product.result == 1) {
+                            EasyLoading.show(status: "Add to cart..")
+                                .whenComplete(() {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("Product Successfully Added !"),
+                                duration: Duration(seconds: 2),
+                              ));
+                              EasyLoading.dismiss();
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Error !"),
+                              duration: Duration(seconds: 2),
+                            ));
+                          }
+                        }
+                      }
+                    },
+                    child: Text("Add Product")),
+              )
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class Addproductdata {
+  int? connection;
+  int? result;
+
+  Addproductdata({this.connection, this.result});
+
+  Addproductdata.fromJson(Map<String, dynamic> json) {
+    connection = json['connection'];
+    result = json['result'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['connection'] = this.connection;
+    data['result'] = this.result;
+    return data;
   }
 }
 
@@ -301,8 +366,21 @@ class Viewproduct extends StatefulWidget {
 class _ViewproductState extends State<Viewproduct> {
   @override
   Widget build(BuildContext context) {
+    double theight = MediaQuery.of(context).size.height;
+    double tstatusbar = MediaQuery.of(context).padding.top;
+    double tnavigator = MediaQuery.of(context).padding.bottom;
+    double appbarheight = kToolbarHeight;
+    double bodyh = theight - tstatusbar - tnavigator - appbarheight;
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      // backgroundColor: Colors.lightBlueAccent,
+      body: Container(
+        height: bodyh,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("backgroundimg/cart3.jpeg"),
+                fit: BoxFit.fill,
+                opacity: 150)),
+      ),
     );
   }
 }
