@@ -72,10 +72,6 @@ class _signuppgState extends State<signuppg> {
                           context: context,
                           builder: (context) {
                             return Container(
-                              // decoration: BoxDecoration(
-                              //     borderRadius: BorderRadius.only(
-                              //         topRight: Radius.circular(20),
-                              //         topLeft: Radius.circular(20))),
                               height: 100,
                               child: Row(
                                 mainAxisAlignment:
