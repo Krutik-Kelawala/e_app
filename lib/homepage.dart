@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:e_app/splacescreen.dart';
+import 'package:e_app/updatepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +20,7 @@ class _HomepgState extends State<Homepg> {
   String? useremail;
   String? userimage;
 
-  List<Widget> widgetlist = [Viewproduct(), Addproduct()];
+  List<Widget> widgetlist = [View_product(), Addproduct()];
   int productpage = 0;
 
   @override
@@ -113,7 +115,9 @@ class _AddproductState extends State<Addproduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    userloginid = splacescreenpg.pref!.getString("id") ?? "";
+    setState(() {
+      userloginid = splacescreenpg.pref!.getString("id") ?? "";
+    });
   }
 
   String? userloginid;
@@ -358,12 +362,59 @@ class Addproductdata {
   }
 }
 
-class Viewproduct extends StatefulWidget {
+class View_product extends StatefulWidget {
   @override
-  State<Viewproduct> createState() => _ViewproductState();
+  State<View_product> createState() => _ViewproductState();
 }
 
-class _ViewproductState extends State<Viewproduct> {
+class _ViewproductState extends State<View_product> {
+  String? userloginid;
+
+  List pofid = [];
+  List pname = [];
+  List pprice = [];
+  List pdetail = [];
+  List productimagepic = [];
+
+  int viewproductlength = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setState(() {
+      userloginid = splacescreenpg.pref!.getString("id") ?? "";
+    });
+    viewproductdata();
+  }
+
+  viewproductdata() async {
+    print("hello");
+    var url = Uri.parse(
+        'https://leachiest-draft.000webhostapp.com/Apicalling/viewproductdata.php');
+    var response = await http.post(url, body: {
+      "userid": userloginid,
+    });
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    var viewdata = jsonDecode(response.body);
+    myviewproduct viewofproduct = myviewproduct.fromJson(viewdata);
+
+    setState(() {
+      viewproductlength = viewofproduct.viewproduct!.length;
+    });
+    for (int i = 0; i < viewproductlength; i++) {
+      print("Length==${viewproductlength}");
+      pofid.add(viewofproduct.viewproduct![i].productid);
+      pname.add(viewofproduct.viewproduct![i].productname);
+      pprice.add(viewofproduct.viewproduct![i].productprice);
+      pdetail.add(viewofproduct.viewproduct![i].productdetail);
+      productimagepic.add(viewofproduct.viewproduct![i].productimage);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double theight = MediaQuery.of(context).size.height;
@@ -372,15 +423,177 @@ class _ViewproductState extends State<Viewproduct> {
     double appbarheight = kToolbarHeight;
     double bodyh = theight - tstatusbar - tnavigator - appbarheight;
     return Scaffold(
-      // backgroundColor: Colors.lightBlueAccent,
       body: Container(
         height: bodyh,
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("backgroundimg/cart3.jpeg"),
                 fit: BoxFit.fill,
-                opacity: 150)),
+                opacity: 200)),
+        child: GridView.builder(
+          padding: EdgeInsets.all(5),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, mainAxisSpacing: 10, crossAxisSpacing: 10),
+          itemCount: viewproductlength,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {},
+              child: Card(
+                shadowColor: Colors.red,
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      alignment: AlignmentDirectional.topEnd,
+                      child: PopupMenuButton(
+                        onSelected: (value) {
+                          if (value == "edit") {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(
+                              builder: (context) {
+                                return updatepg(
+                                  pname[index],
+                                  pprice[index],
+                                  pdetail[index],
+                                  productimagepic[index],
+                                );
+                              },
+                            ));
+                          }
+                        },
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                                value: "edit",
+                                onTap: () {},
+                                child: Text("Edit")),
+                            PopupMenuItem(
+                              child: Text("Delete"),
+                              value: "delete",
+                              onTap: () {},
+                            )
+                          ];
+                        },
+                      ),
+                    ),
+                    Container(
+                      height: 100,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          // border: Border.all(width: 1),
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  "https://leachiest-draft.000webhostapp.com/Apicalling/${productimagepic[index]}"),
+                              fit: BoxFit.fill)),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          alignment: AlignmentDirectional.topStart,
+                          padding: EdgeInsets.only(left: 10),
+                          height: 20,
+                          // width: double.infinity,
+                          child: Text("${pname[index]}"),
+                        ),
+                        Container(
+                          alignment: AlignmentDirectional.topEnd,
+                          padding: EdgeInsets.only(right: 10),
+                          height: 20,
+                          // width: dou,
+                          child: Text("Rs ${pprice[index]}"),
+                        )
+                      ],
+                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Container(
+                    //       height: 30,
+                    //       width: 50,
+                    //       decoration: BoxDecoration(
+                    //           border: Border.all(width: 1), color: Colors.green),
+                    //     ),
+                    //
+                    //   ],
+                    // )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
+  }
+}
+
+class myviewproduct {
+  int? connection;
+  int? result;
+  List<Viewproduct>? viewproduct;
+
+  myviewproduct({this.connection, this.result, this.viewproduct});
+
+  myviewproduct.fromJson(Map<String, dynamic> json) {
+    connection = json['connection'];
+    result = json['result'];
+    if (json['viewproduct'] != null) {
+      viewproduct = <Viewproduct>[];
+      json['viewproduct'].forEach((v) {
+        viewproduct!.add(new Viewproduct.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['connection'] = this.connection;
+    data['result'] = this.result;
+    if (this.viewproduct != null) {
+      data['viewproduct'] = this.viewproduct!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Viewproduct {
+  String? productid;
+  String? productname;
+  String? productprice;
+  String? productdetail;
+  String? productimage;
+  String? userid;
+
+  Viewproduct(
+      {this.productid,
+      this.productname,
+      this.productprice,
+      this.productdetail,
+      this.productimage,
+      this.userid});
+
+  Viewproduct.fromJson(Map<String, dynamic> json) {
+    productid = json['productid'];
+    productname = json['productname'];
+    productprice = json['productprice'];
+    productdetail = json['productdetail'];
+    productimage = json['productimage'];
+    userid = json['userid'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['productid'] = this.productid;
+    data['productname'] = this.productname;
+    data['productprice'] = this.productprice;
+    data['productdetail'] = this.productdetail;
+    data['productimage'] = this.productimage;
+    data['userid'] = this.userid;
+    return data;
   }
 }
