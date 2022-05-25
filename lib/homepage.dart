@@ -370,13 +370,16 @@ class View_product extends StatefulWidget {
 class _ViewproductState extends State<View_product> {
   String? userloginid;
 
-  List pofid = [];
-  List pname = [];
-  List pprice = [];
-  List pdetail = [];
-  List productimagepic = [];
+  // List pofid = [];
+  // List pname = [];
+  // List pprice = [];
+  // List pdetail = [];
+  // List productimagepic = [];
 
-  int viewproductlength = 0;
+  // int viewproductlength = 0;
+
+  bool screenload = false;
+  myviewproduct? View_product;
 
   @override
   void initState() {
@@ -400,19 +403,22 @@ class _ViewproductState extends State<View_product> {
     print('Response body: ${response.body}');
 
     var viewdata = jsonDecode(response.body);
-    myviewproduct viewofproduct = myviewproduct.fromJson(viewdata);
-
     setState(() {
-      viewproductlength = viewofproduct.viewproduct!.length;
+      View_product = myviewproduct.fromJson(viewdata);
+      screenload = true;
     });
-    for (int i = 0; i < viewproductlength; i++) {
-      print("Length==${viewproductlength}");
-      pofid.add(viewofproduct.viewproduct![i].productid);
-      pname.add(viewofproduct.viewproduct![i].productname);
-      pprice.add(viewofproduct.viewproduct![i].productprice);
-      pdetail.add(viewofproduct.viewproduct![i].productdetail);
-      productimagepic.add(viewofproduct.viewproduct![i].productimage);
-    }
+
+    // setState(() {
+    //   viewproductlength = viewofproduct.viewproduct!.length;
+    // });
+    // for (int i = 0; i < viewproductlength; i++) {
+    //   print("Length==${viewproductlength}");
+    //   pofid.add(viewofproduct.viewproduct![i].productid);
+    //   pname.add(viewofproduct.viewproduct![i].productname);
+    //   pprice.add(viewofproduct.viewproduct![i].productprice);
+    //   pdetail.add(viewofproduct.viewproduct![i].productdetail);
+    //   productimagepic.add(viewofproduct.viewproduct![i].productimage);
+    // }
   }
 
   @override
@@ -422,113 +428,137 @@ class _ViewproductState extends State<View_product> {
     double tnavigator = MediaQuery.of(context).padding.bottom;
     double appbarheight = kToolbarHeight;
     double bodyh = theight - tstatusbar - tnavigator - appbarheight;
-    return Scaffold(
-      body: Container(
-        height: bodyh,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("backgroundimg/cart3.jpeg"),
-                fit: BoxFit.fill,
-                opacity: 200)),
-        child: GridView.builder(
-          padding: EdgeInsets.all(5),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, mainAxisSpacing: 10, crossAxisSpacing: 10),
-          itemCount: viewproductlength,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {},
-              child: Card(
-                shadowColor: Colors.red,
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      alignment: AlignmentDirectional.topEnd,
-                      child: PopupMenuButton(
-                        onSelected: (value) {
-                          if (value == "edit") {
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(
-                              builder: (context) {
-                                return updatepg(
-                                  pname[index],
-                                  pprice[index],
-                                  pdetail[index],
-                                  productimagepic[index],
-                                );
+    return screenload
+        ? Scaffold(
+            body: Container(
+              height: bodyh,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("backgroundimg/cart3.jpeg"),
+                      fit: BoxFit.fill,
+                      opacity: 200)),
+              child: GridView.builder(
+                padding: EdgeInsets.all(5),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10),
+                itemCount: View_product!.viewproduct!.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {},
+                    child: Card(
+                      shadowColor: Colors.red,
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            alignment: AlignmentDirectional.topEnd,
+                            child: PopupMenuButton(
+                              onSelected: (value) {
+                                if (value == "edit") {
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(
+                                    builder: (context) {
+                                      return updatepg(
+                                          View_product!
+                                              .viewproduct![index].productid!,
+                                          View_product!
+                                              .viewproduct![index].productname!,
+                                          View_product!.viewproduct![index]
+                                              .productprice!,
+                                          View_product!.viewproduct![index]
+                                              .productdetail!,
+                                          View_product!.viewproduct![index]
+                                              .productimage!);
+                                    },
+                                  ));
+                                }
                               },
-                            ));
-                          }
-                        },
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem(
-                                value: "edit",
-                                onTap: () {},
-                                child: Text("Edit")),
-                            PopupMenuItem(
-                              child: Text("Delete"),
-                              value: "delete",
-                              onTap: () {},
-                            )
-                          ];
-                        },
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                      value: "edit",
+                                      onTap: () {},
+                                      child: Text("Edit")),
+                                  PopupMenuItem(
+                                    child: Text("Delete"),
+                                    value: "delete",
+                                    onTap: () async {
+                                      Map deletemap = {
+                                        "productid": View_product!
+                                            .viewproduct![index].productid
+                                      };
+
+                                      var url = Uri.parse(
+                                          'https://leachiest-draft.000webhostapp.com/Apicalling/delete.php');
+                                      var response =
+                                          await http.post(url, body: deletemap);
+                                      print(
+                                          'Response status: ${response.statusCode}');
+                                      print('Response body: ${response.body}');
+                                    },
+                                  )
+                                ];
+                              },
+                            ),
+                          ),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                // border: Border.all(width: 1),
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        "https://leachiest-draft.000webhostapp.com/Apicalling/${View_product!.viewproduct![index].productimage}"),
+                                    fit: BoxFit.fill)),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                alignment: AlignmentDirectional.topStart,
+                                padding: EdgeInsets.only(left: 10),
+                                height: 30,
+                                width: 100,
+                                child: Text(
+                                    "${View_product!.viewproduct![index].productname}"),
+                              ),
+                              Container(
+                                alignment: AlignmentDirectional.topEnd,
+                                padding: EdgeInsets.only(right: 10),
+                                height: 20,
+                                // width: dou,
+                                child: Text(
+                                    "Rs ${View_product!.viewproduct![index].productprice}"),
+                              )
+                            ],
+                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     Container(
+                          //       height: 30,
+                          //       width: 50,
+                          //       decoration: BoxDecoration(
+                          //           border: Border.all(width: 1), color: Colors.green),
+                          //     ),
+                          //
+                          //   ],
+                          // )
+                        ],
                       ),
                     ),
-                    Container(
-                      height: 100,
-                      width: 80,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          // border: Border.all(width: 1),
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                  "https://leachiest-draft.000webhostapp.com/Apicalling/${productimagepic[index]}"),
-                              fit: BoxFit.fill)),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          alignment: AlignmentDirectional.topStart,
-                          padding: EdgeInsets.only(left: 10),
-                          height: 20,
-                          // width: double.infinity,
-                          child: Text("${pname[index]}"),
-                        ),
-                        Container(
-                          alignment: AlignmentDirectional.topEnd,
-                          padding: EdgeInsets.only(right: 10),
-                          height: 20,
-                          // width: dou,
-                          child: Text("Rs ${pprice[index]}"),
-                        )
-                      ],
-                    ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Container(
-                    //       height: 30,
-                    //       width: 50,
-                    //       decoration: BoxDecoration(
-                    //           border: Border.all(width: 1), color: Colors.green),
-                    //     ),
-                    //
-                    //   ],
-                    // )
-                  ],
-                ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
-    );
+            ),
+          )
+        : Center(child: CircularProgressIndicator());
   }
 }
 

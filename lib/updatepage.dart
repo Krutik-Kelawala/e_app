@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class updatepg extends StatefulWidget {
-  String productimagepic;
-  String pname;
-  String pprice;
-  String pdetail;
+  String Productid;
+  String Productname;
+  String Productprice;
+  String Productdetail;
+  String Productimg;
 
-  updatepg(this.pname, this.pprice, this.pdetail, this.productimagepic);
+  updatepg(this.Productid, this.Productname, this.Productprice,
+      this.Productdetail, this.Productimg);
 
   @override
   State<updatepg> createState() => _updatepgState();
@@ -34,11 +36,11 @@ class _updatepgState extends State<updatepg> {
     setState(() {
       userid = splacescreenpg.pref!.getString("id") ?? "";
     });
-    String pofname = widget.pname;
+    String pofname = widget.Productname;
     productname.text = pofname;
-    String pofprice = widget.pprice;
+    String pofprice = widget.Productprice;
     productprice.text = pofprice;
-    String pofdetail = widget.pdetail;
+    String pofdetail = widget.Productdetail;
     productdiscription.text = pofdetail;
   }
 
@@ -132,7 +134,7 @@ class _updatepgState extends State<updatepg> {
                             borderRadius: BorderRadiusDirectional.circular(20),
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    "https://leachiest-draft.000webhostapp.com/Apicalling/${widget.productimagepic}"),
+                                    "https://leachiest-draft.000webhostapp.com/Apicalling/${widget.Productimg}"),
                                 fit: BoxFit.cover)),
                       ),
                     ),
@@ -201,6 +203,14 @@ class _updatepgState extends State<updatepg> {
                           List<int> ll = File(productimg).readAsBytesSync();
                           String productimagepic = base64Encode(ll);
 
+                          Map editmap = {
+                            "productid": widget.Productid,
+                            "productname": widget.Productname,
+                            "productprice": widget.Productprice,
+                            "productdetail": widget.Productdetail,
+                            "productdata": productimagepic
+                          };
+
                           if (pname.isEmpty) {
                             setState(() {
                               pnamestatus = true;
@@ -209,7 +219,13 @@ class _updatepgState extends State<updatepg> {
                             setState(() {
                               ppricestatus = true;
                             });
-                          } else {}
+                          } else {
+                            var url = Uri.parse(
+                                'https://leachiest-draft.000webhostapp.com/Apicalling/updateproduct.php');
+                            var response = await http.post(url, body: editmap);
+                            print('Response status: ${response.statusCode}');
+                            print('Response body: ${response.body}');
+                          }
                         },
                         child: Text("Edit Details")),
                   )

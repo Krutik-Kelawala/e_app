@@ -24,8 +24,8 @@ class _signuppgState extends State<signuppg> {
   TextEditingController email = TextEditingController();
   TextEditingController signuppassword = TextEditingController();
   String profileimg = "";
-  var emailvalid =
-      RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.com", caseSensitive: false);
+  // var emailvalid =
+  //     RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.com", caseSensitive: false);
 
   bool namestatus = false;
   bool numberstatus = false;
