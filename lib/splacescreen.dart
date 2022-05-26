@@ -49,7 +49,7 @@ class _splacescreenpgState extends State<splacescreenpg> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF84E586),
+      // backgroundColor: Color(0xFF84E586),
       body: SafeArea(
         child: Center(
           child: Container(

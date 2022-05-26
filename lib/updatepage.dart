@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:e_app/homepage.dart';
 import 'package:e_app/splacescreen.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -42,6 +44,9 @@ class _updatepgState extends State<updatepg> {
     productprice.text = pofprice;
     String pofdetail = widget.Productdetail;
     productdiscription.text = pofdetail;
+    String pofimg = widget.Productimg;
+
+    print("IMG====$pofimg");
   }
 
   @override
@@ -197,6 +202,7 @@ class _updatepgState extends State<updatepg> {
                             elevation: 10,
                             shadowColor: Colors.black),
                         onPressed: () async {
+                          print("hello");
                           String pname = productname.text;
                           String pprice = productprice.text;
                           String pdetail = productdiscription.text;
@@ -205,11 +211,14 @@ class _updatepgState extends State<updatepg> {
 
                           Map editmap = {
                             "productid": widget.Productid,
-                            "productname": widget.Productname,
-                            "productprice": widget.Productprice,
-                            "productdetail": widget.Productdetail,
-                            "productdata": productimagepic
+                            "productname": pname,
+                            "productprice": pprice,
+                            "productdetail": pdetail,
+                            "productdata": productimagepic,
+                            "imageofproduct": widget.Productimg,
                           };
+
+                          print("pathh==${widget.Productimg}");
 
                           if (pname.isEmpty) {
                             setState(() {
@@ -225,6 +234,30 @@ class _updatepgState extends State<updatepg> {
                             var response = await http.post(url, body: editmap);
                             print('Response status: ${response.statusCode}');
                             print('Response body: ${response.body}');
+
+                            var update = jsonDecode(response.body);
+                            myUpdatedetail detailupdate =
+                                myUpdatedetail.fromJson(update);
+
+                            if (detailupdate.connetion == 1) {
+                              if (detailupdate.result == 1) {
+                                EasyLoading.show(status: "Update....")
+                                    .whenComplete(() {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text("Update Successfully !"),
+                                    duration: Duration(seconds: 2),
+                                  ));
+                                  EasyLoading.dismiss();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(
+                                    builder: (context) {
+                                      return Homepg();
+                                    },
+                                  ));
+                                });
+                              }
+                            }
                           }
                         },
                         child: Text("Edit Details")),
@@ -255,7 +288,16 @@ class _updatepgState extends State<updatepg> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FlatButton(onPressed: () {}, child: Text("Yes")),
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.of(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (context) {
+                            return Homepg();
+                          },
+                        ));
+                      },
+                      child: Text("Yes")),
                   Divider(
                     height: 1,
                     thickness: 1,
@@ -275,5 +317,24 @@ class _updatepgState extends State<updatepg> {
       },
     );
     return Future.value(true);
+  }
+}
+
+class myUpdatedetail {
+  int? connetion;
+  int? result;
+
+  myUpdatedetail({this.connetion, this.result});
+
+  myUpdatedetail.fromJson(Map<String, dynamic> json) {
+    connetion = json['connetion'];
+    result = json['result'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['connetion'] = this.connetion;
+    data['result'] = this.result;
+    return data;
   }
 }
