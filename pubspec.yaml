@@ -40,6 +40,8 @@ dependencies:
   shared_preferences:
   lottie:
   flutter_easyloading:
+  razorpay_flutter:
+
 
 dev_dependencies:
   flutter_test:

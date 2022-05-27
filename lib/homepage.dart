@@ -24,6 +24,8 @@ class _HomepgState extends State<Homepg> {
   List<Widget> widgetlist = [View_product(), Addproduct()];
   int productpage = 0;
 
+  // bool searchiconstatus = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -144,224 +146,236 @@ class _AddproductState extends State<Addproduct> {
     return appload
         ? Scaffold(
             // backgroundColor: Color(0xFFEE9E9E),
-            body: SafeArea(
-              child: Container(
-                height: bodyh,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("backgroundimg/back1.jpeg"),
-                        fit: BoxFit.cover,
-                        opacity: 150)),
-                child: SingleChildScrollView(
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20))),
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                height: 200,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      "Update Product Image",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Divider(
-                                      thickness: 3,
-                                      endIndent: 20,
-                                      indent: 20,
-                                    ),
-                                    TextButton(
-                                        onPressed: () async {
-                                          // Capture a photo
-                                          final XFile? image =
-                                              await _picker.pickImage(
-                                                  source: ImageSource.camera);
-                                          setState(() {
-                                            productimg = image!.path;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Take Image")),
-                                    TextButton(
-                                        onPressed: () async {
-                                          // Pick an image
-                                          final XFile? image =
-                                              await _picker.pickImage(
-                                                  source: ImageSource.gallery);
-                                          setState(() {
-                                            productimg = image!.path;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Choose Image"))
-                                  ],
-                                ),
-                              );
+            body: WillPopScope(
+              onWillPop: getback,
+              child: SafeArea(
+                child: Container(
+                  height: bodyh,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("backgroundimg/back1.jpeg"),
+                          fit: BoxFit.cover,
+                          opacity: 150)),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20))),
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  height: 200,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "Update Product Image",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Divider(
+                                        thickness: 3,
+                                        endIndent: 20,
+                                        indent: 20,
+                                      ),
+                                      TextButton(
+                                          onPressed: () async {
+                                            // Capture a photo
+                                            final XFile? image =
+                                                await _picker.pickImage(
+                                                    source: ImageSource.camera);
+                                            setState(() {
+                                              productimg = image!.path;
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Take Image")),
+                                      TextButton(
+                                          onPressed: () async {
+                                            // Pick an image
+                                            final XFile? image =
+                                                await _picker.pickImage(
+                                                    source:
+                                                        ImageSource.gallery);
+                                            setState(() {
+                                              productimg = image!.path;
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Choose Image"))
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            height: 150,
+                            width: 150,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(20),
+                                border: Border.all(width: 1)),
+                            child: productimg == ""
+                                ? Icon(Icons.add_a_photo)
+                                : Container(
+                                    // height: 100,
+                                    // width: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadiusDirectional.circular(
+                                                20),
+                                        image: DecorationImage(
+                                            image: FileImage(File(productimg)),
+                                            fit: BoxFit.cover)),
+                                  ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: TextField(
+                            toolbarOptions: ToolbarOptions(
+                                cut: true,
+                                paste: true,
+                                selectAll: true,
+                                copy: true),
+                            onChanged: (value) {
+                              setState(() {
+                                pnamestatus = false;
+                              });
                             },
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          height: 150,
-                          width: 150,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadiusDirectional.circular(20),
-                              border: Border.all(width: 1)),
-                          child: productimg == ""
-                              ? Icon(Icons.add_a_photo)
-                              : Container(
-                                  // height: 100,
-                                  // width: 100,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadiusDirectional.circular(20),
-                                      image: DecorationImage(
-                                          image: FileImage(File(productimg)),
-                                          fit: BoxFit.cover)),
-                                ),
+                            controller: productname,
+                            decoration: InputDecoration(
+                                errorText:
+                                    pnamestatus ? "Enter Product name" : null,
+                                hintText: "Enter product name",
+                                labelText: "Product Name"),
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        child: TextField(
-                          toolbarOptions: ToolbarOptions(
-                              cut: true,
-                              paste: true,
-                              selectAll: true,
-                              copy: true),
-                          onChanged: (value) {
-                            setState(() {
-                              pnamestatus = false;
-                            });
-                          },
-                          controller: productname,
-                          decoration: InputDecoration(
-                              errorText:
-                                  pnamestatus ? "Enter Product name" : null,
-                              hintText: "Enter product name",
-                              labelText: "Product Name"),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: TextField(
+                            toolbarOptions: ToolbarOptions(
+                                cut: true,
+                                paste: true,
+                                selectAll: true,
+                                copy: true),
+                            onChanged: (value) {
+                              setState(() {
+                                ppricestatus = false;
+                              });
+                            },
+                            controller: productprice,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                errorText:
+                                    ppricestatus ? "Enter Product price" : null,
+                                hintText: "Enter product price",
+                                labelText: "Product Price"),
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        child: TextField(
-                          toolbarOptions: ToolbarOptions(
-                              cut: true,
-                              paste: true,
-                              selectAll: true,
-                              copy: true),
-                          onChanged: (value) {
-                            setState(() {
-                              ppricestatus = false;
-                            });
-                          },
-                          controller: productprice,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              errorText:
-                                  ppricestatus ? "Enter Product price" : null,
-                              hintText: "Enter product price",
-                              labelText: "Product Price"),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        child: TextField(
-                          toolbarOptions: ToolbarOptions(
-                              cut: true,
-                              paste: true,
-                              selectAll: true,
-                              copy: true),
-                          controller: productdiscription,
-                          maxLines: 10,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              hintText: "Discription",
-                              labelText: "Product Discription"),
-                        ),
-                      ),
-                      Container(
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: TextField(
+                            toolbarOptions: ToolbarOptions(
+                                cut: true,
+                                paste: true,
+                                selectAll: true,
+                                copy: true),
+                            controller: productdiscription,
+                            maxLines: 10,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20)),
-                                elevation: 10,
-                                shadowColor: Colors.black),
-                            onPressed: () async {
-                              String pname = productname.text;
-                              String pprice = productprice.text;
-                              String pdetail = productdiscription.text;
-                              List<int> ll = File(productimg).readAsBytesSync();
-                              String productimagepic = base64Encode(ll);
+                                hintText: "Discription",
+                                labelText: "Product Discription"),
+                          ),
+                        ),
+                        Container(
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  elevation: 10,
+                                  shadowColor: Colors.black),
+                              onPressed: () async {
+                                String pname = productname.text;
+                                String pprice = productprice.text;
+                                String pdetail = productdiscription.text;
+                                List<int> ll =
+                                    File(productimg).readAsBytesSync();
+                                String productimagepic = base64Encode(ll);
 
-                              Map productmap = {
-                                "userid": userloginid,
-                                "nameofproduct": pname,
-                                "priceofprodut": pprice,
-                                "detailofproduct": pdetail,
-                                "imageofproduct": productimagepic
-                              };
+                                Map productmap = {
+                                  "userid": userloginid,
+                                  "nameofproduct": pname,
+                                  "priceofprodut": pprice,
+                                  "detailofproduct": pdetail,
+                                  "imageofproduct": productimagepic
+                                };
 
-                              if (pname.isEmpty) {
-                                setState(() {
-                                  pnamestatus = true;
-                                });
-                              } else if (pprice.isEmpty) {
-                                setState(() {
-                                  ppricestatus = true;
-                                });
-                              } else {
-                                var url = Uri.parse(
-                                    'https://leachiest-draft.000webhostapp.com/Apicalling/adddproduct.php');
-                                var response =
-                                    await http.post(url, body: productmap);
-                                print(
-                                    'Response status: ${response.statusCode}');
-                                print('Response body: ${response.body}');
+                                if (pname.isEmpty) {
+                                  setState(() {
+                                    pnamestatus = true;
+                                  });
+                                } else if (pprice.isEmpty) {
+                                  setState(() {
+                                    ppricestatus = true;
+                                  });
+                                } else {
+                                  var url = Uri.parse(
+                                      'https://leachiest-draft.000webhostapp.com/Apicalling/adddproduct.php');
+                                  var response =
+                                      await http.post(url, body: productmap);
+                                  print(
+                                      'Response status: ${response.statusCode}');
+                                  print('Response body: ${response.body}');
 
-                                var productadd = jsonDecode(response.body);
+                                  var productadd = jsonDecode(response.body);
 
-                                Addproductdata add_product =
-                                    Addproductdata.fromJson(productadd);
+                                  Addproductdata add_product =
+                                      Addproductdata.fromJson(productadd);
 
-                                if (add_product.connection == 1) {
-                                  if (add_product.result == 1) {
-                                    EasyLoading.show(status: "Add to cart..")
-                                        .whenComplete(() {
+                                  if (add_product.connection == 1) {
+                                    if (add_product.result == 1) {
+                                      EasyLoading.show(status: "Add to cart..")
+                                          .whenComplete(() {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(
+                                              "Product Successfully Added !"),
+                                          duration: Duration(seconds: 2),
+                                        ));
+                                        EasyLoading.dismiss();
+                                        Navigator.pushReplacement(context,
+                                            MaterialPageRoute(
+                                          builder: (context) {
+                                            return Homepg();
+                                          },
+                                        ));
+                                      });
+                                    } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
-                                        content: Text(
-                                            "Product Successfully Added !"),
+                                        content: Text("Error !"),
                                         duration: Duration(seconds: 2),
                                       ));
-                                      EasyLoading.dismiss();
-                                    });
-                                  } else {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text("Error !"),
-                                      duration: Duration(seconds: 2),
-                                    ));
+                                    }
                                   }
                                 }
-                              }
-                            },
-                            child: Text("Add Product")),
-                      )
-                    ],
+                              },
+                              child: Text("Add Product")),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -371,6 +385,15 @@ class _AddproductState extends State<Addproduct> {
             child: CircularProgressIndicator(
             color: Colors.black,
           ));
+  }
+
+  Future<bool> getback() {
+    Navigator.pushReplacement(context, MaterialPageRoute(
+      builder: (context) {
+        return Homepg();
+      },
+    ));
+    return Future.value(true);
   }
 }
 
@@ -424,7 +447,7 @@ class _ViewproductState extends State<View_product> {
   }
 
   Future<void> viewproductdata() async {
-    print("hello");
+    print("helloooo");
     var url = Uri.parse(
         'https://leachiest-draft.000webhostapp.com/Apicalling/viewproductdata.php');
     var response = await http.post(url, body: {
@@ -433,8 +456,12 @@ class _ViewproductState extends State<View_product> {
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 
-    var viewdata = jsonDecode(response.body);
+    // if (View_product!.connection == 1) {
+    //   if (View_product!.result == 1) {}
+    // }
+
     setState(() {
+      var viewdata = jsonDecode(response.body);
       View_product = myviewproduct.fromJson(viewdata);
       screenload = true;
     });
@@ -476,8 +503,8 @@ class _ViewproductState extends State<View_product> {
                   padding: EdgeInsets.all(5),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10),
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 5),
                   itemCount: View_product!.viewproduct!.length,
                   itemBuilder: (context, index) {
                     return InkWell(
@@ -495,9 +522,9 @@ class _ViewproductState extends State<View_product> {
                       },
                       child: Card(
                         shadowColor: Colors.red,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                        elevation: 10,
+                        // shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(10)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -568,7 +595,7 @@ class _ViewproductState extends State<View_product> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  alignment: AlignmentDirectional.topStart,
+                                  alignment: AlignmentDirectional.centerStart,
                                   padding: EdgeInsets.only(left: 10),
                                   height: 30,
                                   width: 100,
@@ -576,7 +603,7 @@ class _ViewproductState extends State<View_product> {
                                       "${View_product!.viewproduct![index].productname}"),
                                 ),
                                 Container(
-                                  alignment: AlignmentDirectional.topEnd,
+                                  alignment: AlignmentDirectional.centerEnd,
                                   padding: EdgeInsets.only(right: 10),
                                   height: 20,
                                   // width: dou,

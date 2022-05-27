@@ -243,18 +243,22 @@ class _updatepgState extends State<updatepg> {
                               if (detailupdate.result == 1) {
                                 EasyLoading.show(status: "Update....")
                                     .whenComplete(() {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text("Update Successfully !"),
-                                    duration: Duration(seconds: 2),
-                                  ));
-                                  EasyLoading.dismiss();
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(
-                                    builder: (context) {
-                                      return Homepg();
-                                    },
-                                  ));
+                                  Future.delayed(Duration(seconds: 10))
+                                      .then((value) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text("Update Successfully !"),
+                                      duration: Duration(seconds: 2),
+                                    ));
+
+                                    EasyLoading.dismiss();
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(
+                                      builder: (context) {
+                                        return Homepg();
+                                      },
+                                    ));
+                                  });
                                 });
                               }
                             }
@@ -290,7 +294,7 @@ class _updatepgState extends State<updatepg> {
                 children: [
                   FlatButton(
                       onPressed: () {
-                        Navigator.of(context);
+                        Navigator.pop(context);
                         Navigator.pushReplacement(context, MaterialPageRoute(
                           builder: (context) {
                             return Homepg();

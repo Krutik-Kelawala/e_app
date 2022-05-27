@@ -13,6 +13,7 @@ class splacescreenpg extends StatefulWidget {
 
 class _splacescreenpgState extends State<splacescreenpg> {
   bool loginstatus = false;
+  bool loadstatus = false;
 
   @override
   void initState() {
@@ -20,6 +21,9 @@ class _splacescreenpgState extends State<splacescreenpg> {
     super.initState();
 
     getpref();
+    setState(() {
+      loadstatus = true;
+    });
   }
 
   getpref() async {
@@ -48,18 +52,23 @@ class _splacescreenpgState extends State<splacescreenpg> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: Color(0xFF84E586),
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            height: 300,
-            width: 350,
-            child: Lottie.asset("lottieanimation/onlineshopping.json",
-                fit: BoxFit.fill),
-          ),
-        ),
-      ),
-    );
+    return loadstatus
+        ? Scaffold(
+            // backgroundColor: Color(0xFF84E586),
+            body: SafeArea(
+              child: Center(
+                child: Container(
+                  height: 300,
+                  width: 350,
+                  child: Lottie.asset("lottieanimation/onlineshopping.json",
+                      fit: BoxFit.fill),
+                ),
+              ),
+            ),
+          )
+        : Center(
+            child: CircularProgressIndicator(
+            color: Colors.black,
+          ));
   }
 }
